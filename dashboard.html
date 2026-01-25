@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Admin Panel</title>
+  <meta charset="UTF-8">
+</head>
+
+<body style="font-family:Arial; margin:40px;">
+<h2>💸 Withdraw</h2>
+
+<form method="POST" action="/api/withdraw">
+  <input type="number" name="amount" placeholder="Amount" required>
+  <button type="submit">Request Withdrawal</button>
+</form>
+
+<hr style="margin:40px">
+
+  <h1>👮 Admin Panel</h1>
+
+  <h2>👥 All Users</h2>
+  <div id="users">Loading users...</div>
+
+  <br><br>
+  <a href="/dashboard">Back to Dashboard</a> |
+  <a href="/logout">Logout</a>
+
+  <script>
+    fetch("/api/admin/users")
+      .then(res => res.json())
+      .then(users => {
+        const box = document.getElementById("users");
+
+        if (users.length === 0) {
+          box.innerHTML = "<i>No users found</i>";
+          return;
+        }
+
+        box.innerHTML = "";
+
+        users.forEach(u => {
+          box.innerHTML += `
+            <div style="border:1px solid #ccc; padding:12px; margin-bottom:10px;">
+              <b>Email:</b> ${u.email}<br>
+              <b>Wallet:</b> ${u.wallet} points<br>
+              <b>Completed Tasks:</b> ${u.completedTasks}
+            </div>
+          `;
+        });
+      });
+  </script>
+
+</body>
+</html>

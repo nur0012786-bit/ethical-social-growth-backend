@@ -1,0 +1,37 @@
+[
+  {
+    "email": "test@test.com",
+    "password": "123456",
+    "wallet": 0,
+    "completedTasks": [],
+    "createdAt": "2025-01-01T00:00:00.000Z"
+  },
+  {
+    "email": "nur0012786@gmail.com",
+    "password": "123456",
+    "wallet": 10,
+    "completedTasks": []
+  },
+  {
+    "email": "test1@test.com",
+    "password": "1234",
+    "wallet": 30,
+    "completedTasks": [
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "email": "admin@test.com",
+    "password": "1234",
+    "wallet": 0,
+    "completedTasks": []
+  },
+  {
+    "email": "best@best.com",
+    "password": "$2b$10$zav9vFUYGd.u0V4W0Yfu/e8uO5wc4ryJ0JOsTVIbkx39Y8UcXA5fu",
+    "wallet": 0,
+    "completedTasks": []
+  }
+]

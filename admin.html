@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Panel</title>
+</head>
+
+<body style="font-family: Arial; margin:40px;">
+
+  <h1>👮 Admin Panel</h1>
+
+  <!-- USERS SECTION -->
+  <h2>👥 All Users</h2>
+  <div id="users">Loading users...</div>
+
+  <hr style="margin:30px 0;">
+<h2>💰 Edit User Wallet</h2>
+
+<form method="POST" action="/api/admin/update-wallet">
+  <input type="email" name="email" placeholder="User email" required>
+  <input type="number" name="amount" placeholder="+10 or -5" required>
+  <button type="submit">Update Wallet</button>
+</form>
+
+<hr style="margin:30px 0;">
+
+  <!-- TASK MANAGEMENT -->
+  <h2>📋 Manage Tasks</h2>
+
+  <h3>Add New Task</h3>
+  <form method="POST" action="/api/admin/tasks/add">
+    <input type="text" name="title" placeholder="Task title" required>
+    <input type="number" name="reward" placeholder="Reward points" required>
+    <button type="submit">Add Task</button>
+  </form>
+
+  <h3 style="margin-top:30px;">Existing Tasks</h3>
+  <div id="tasks">Loading tasks...</div>
+
+  <hr style="margin:30px 0;">
+
+  <a href="/dashboard">Back to Dashboard</a> |
+  <a href="/logout">Logout</a>
+<hr>
+
+<h2>💸 Withdraw Requests</h2>
+<div id="withdrawals">Loading...</div>
+
+<script>
+  fetch("/withdrawals.json")
+    .then(res => res.json())
+    .then(list => {
+      const box = document.getElementById("withdrawals");
+      box.innerHTML = "";
+
+      if (list.length === 0) {
+        box.innerHTML = "<i>No requests</i>";
+        return;
+      }
+
+      list.forEach((w, i) => {
+        box.innerHTML += `
+          <div style="border:1px solid #ccc; padding:10px; margin:5px;">
+            <b>${w.email}</b><br>
+            Amount: ${w.amount}<br>
+            Status: ${w.status}<br>
+
+            ${w.status === "pending" ? `
+              <form method="POST" action="/api/admin/withdrawals/update">
+                <input type="hidden" name="index" value="${i}">
+                <button name="action" value="approve">Approve</button>
+                <button name="action" value="reject">Reject</button>
+              </form>
+            ` : ""}
+          </div>
+        `;
+      });
+    });
+</script>
+
+  <script>
+    /* Load users */
+    fetch("/api/admin/users")
+      .then(res => res.json())
+      .then(users => {
+        const box = document.getElementById("users");
+        box.innerHTML = "";
+
+        if (users.length === 0) {
+          box.innerHTML = "<i>No users found</i>";
+          return;
+        }
+
+        users.forEach(u => {
+          box.innerHTML += `
+            <div style="border:1px solid #ccc; padding:10px; margin:5px;">
+              <b>Email:</b> ${u.email}<br>
+              <b>Wallet:</b> ${u.wallet} points<br>
+              <b>Completed Tasks:</b> ${u.completedTasks}
+            </div>
+          `;
+        });
+      });
+
+    /* Load tasks */
+    fetch("/api/admin/tasks")
+      .then(res => res.json())
+      .then(tasks => {
+        const box = document.getElementById("tasks");
+        box.innerHTML = "";
+
+        if (tasks.length === 0) {
+          box.innerHTML = "<i>No tasks available</i>";
+          return;
+        }
+
+        tasks.forEach(t => {
+          box.innerHTML += `
+            <div style="border:1px solid #ccc; padding:10px; margin:5px;">
+              <b>${t.title}</b> — ${t.reward} points
+              <form method="POST" action="/api/admin/tasks/delete" style="display:inline;">
+                <input type="hidden" name="taskId" value="${t.id}">
+                <button type="submit">Delete</button>
+              </form>
+            </div>
+          `;
+        });
+      });
+  </script>
+
+</body>
+</html>
